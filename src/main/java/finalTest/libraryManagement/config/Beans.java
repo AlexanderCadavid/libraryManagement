@@ -1,14 +1,14 @@
 package finalTest.libraryManagement.config;
 
-import finalTest.libraryManagement.domain.UseCases.books.BooksUseCase;
+import finalTest.libraryManagement.domain.UseCases.book.BookUseCase;
 import finalTest.libraryManagement.domain.UseCases.libraryServices.LibraryServicesUseCase;
-import finalTest.libraryManagement.domain.UseCases.users.UsersUseCase;
-import finalTest.libraryManagement.domain.gateways.books.IBooksRepository;
+import finalTest.libraryManagement.domain.UseCases.user.UserUseCase;
+import finalTest.libraryManagement.domain.gateways.book.IBookRepository;
 import finalTest.libraryManagement.domain.gateways.libraryServices.ILibraryServicesRepository;
-import finalTest.libraryManagement.domain.gateways.users.IUsersRepository;
+import finalTest.libraryManagement.domain.gateways.user.IUserRepository;
 import finalTest.libraryManagement.infrastructure.adapters.jpa.booksRepo.IBookAdapterRepository;
 import finalTest.libraryManagement.infrastructure.adapters.jpa.libraryServicesRepo.ILibraryServiceAdapterRepository;
-import finalTest.libraryManagement.infrastructure.adapters.jpa.usersRepo.IUserAdapterRepository;
+import finalTest.libraryManagement.infrastructure.adapters.jpa.userRepo.IUserAdapterRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,18 +29,20 @@ public class Beans {
         this.iUserAdapterRepository = iUserAdapterRepository;
     }
 
-    @Bean (name = "Books")
-    public BooksUseCase booksUseCase(IBooksRepository iBooksRepository){
-        return new BooksUseCase(iBooksRepository);
+    @Bean(name = "User")
+    public BookUseCase booksUseCase(IBookRepository iBookRepository) {
+        return new BookUseCase(iBookRepository);
     }
 
     @Bean(name = "libraryServices")
-    public LibraryServicesUseCase libraryServicesUseCase (ILibraryServicesRepository iLibraryServicesRepository){
-        return new LibraryServicesUseCase(iLibraryServicesRepository);
+    public LibraryServicesUseCase libraryServicesUseCase(ILibraryServicesRepository iLibraryServicesRepository,
+                                                         IBookRepository iBookRepository,
+                                                         IUserRepository iUserRepository) {
+        return new LibraryServicesUseCase(iLibraryServicesRepository, iBookRepository, iUserRepository);
     }
 
-    @Bean (name = "users")
-    public UsersUseCase usersUseCase (IUsersRepository iUsersRepository){
-        return new UsersUseCase(iUsersRepository);
+    @Bean(name = "user")
+    public UserUseCase usersUseCase(IUserRepository iUserRepository) {
+        return new UserUseCase(iUserRepository);
     }
 }

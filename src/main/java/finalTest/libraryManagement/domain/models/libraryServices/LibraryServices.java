@@ -1,40 +1,40 @@
 package finalTest.libraryManagement.domain.models.libraryServices;
 
-import finalTest.libraryManagement.domain.models.books.Books;
 import finalTest.libraryManagement.domain.models.libraryServices.attributes.DevolutionDate;
 import finalTest.libraryManagement.domain.models.libraryServices.attributes.LoanDate;
 import finalTest.libraryManagement.domain.models.libraryServices.attributes.PenaltyPrice;
 import finalTest.libraryManagement.domain.models.libraryServices.attributes.ServiceId;
-import finalTest.libraryManagement.domain.models.users.Users;
+import finalTest.libraryManagement.domain.models.user.User;
 
 public class LibraryServices {
 
-    private final ServiceId serviceId;
+    private ServiceId serviceId;
 
-    private final DevolutionDate devolutionDate;
+    private  DevolutionDate devolutionDate;
 
     private final LoanDate loanDate;
 
-    private final PenaltyPrice penaltyPrice;
+    private  PenaltyPrice penaltyPrice;
 
-    private final Users users;
+    private User user;
 
-    private final Books books;
+    private finalTest.libraryManagement.domain.models.book.Book book;
 
-    public LibraryServices(ServiceId serviceId, DevolutionDate devolutionDate, LoanDate loanDate,
-                           PenaltyPrice penaltyPrice, Users users,
-                           Books books) {
-        this.serviceId = serviceId;
+    public LibraryServices(DevolutionDate devolutionDate, LoanDate loanDate,
+                           PenaltyPrice penaltyPrice, User user, finalTest.libraryManagement.domain.models.book.Book book) {
         this.devolutionDate = devolutionDate;
         this.loanDate = loanDate;
         this.penaltyPrice = penaltyPrice;
-        this.users = users;
-        this.books = books;
+        this.user = user;
+        this.book = book;
     }
 
-    public ServiceId getServiceId() {
-        return serviceId;
+    public LibraryServices(LoanDate loanDate, User user, finalTest.libraryManagement.domain.models.book.Book book) {
+        this.loanDate = loanDate;
+        this.user = user;
+        this.book = book;
     }
+
 
     public DevolutionDate getDevolutionDate() {
         return devolutionDate;
@@ -44,15 +44,21 @@ public class LibraryServices {
         return loanDate;
     }
 
-    public Users getUsers() {
-        return users;
-    }
-
-    public Books getBooks() {
-        return books;
-    }
-
     public PenaltyPrice getPenaltyPrice() {
         return penaltyPrice;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public finalTest.libraryManagement.domain.models.book.Book getBook() {
+        return book;
+    }
+
+    public ServiceId getServiceId() {
+        return serviceId;
+    }
+
 }
+

@@ -1,7 +1,7 @@
 package finalTest.libraryManagement.infrastructure.adapters.users;
 
-import finalTest.libraryManagement.infrastructure.adapters.jpa.usersRepo.IUserAdapterRepository;
-import finalTest.libraryManagement.infrastructure.adapters.jpa.usersRepo.UserAdapterRepository;
+import finalTest.libraryManagement.infrastructure.adapters.jpa.userRepo.IUserAdapterRepository;
+import finalTest.libraryManagement.infrastructure.adapters.jpa.userRepo.UserAdapterRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;

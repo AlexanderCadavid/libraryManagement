@@ -2,30 +2,22 @@ package finalTest.libraryManagement.infrastructure.adapters.DBOs.libraryServices
 
 import java.time.LocalDate;
 
-import finalTest.libraryManagement.domain.models.books.Books;
-import finalTest.libraryManagement.domain.models.books.attributes.Author;
-import finalTest.libraryManagement.domain.models.books.attributes.Available;
-import finalTest.libraryManagement.domain.models.books.attributes.BookId;
-import finalTest.libraryManagement.domain.models.books.attributes.BookName;
-import finalTest.libraryManagement.domain.models.books.attributes.Category;
+import finalTest.libraryManagement.domain.models.book.attributes.Author;
+import finalTest.libraryManagement.domain.models.book.attributes.Available;
+import finalTest.libraryManagement.domain.models.book.attributes.BookId;
+import finalTest.libraryManagement.domain.models.book.attributes.BookName;
+import finalTest.libraryManagement.domain.models.book.attributes.Category;
 import finalTest.libraryManagement.domain.models.libraryServices.LibraryServices;
 import finalTest.libraryManagement.domain.models.libraryServices.attributes.DevolutionDate;
 import finalTest.libraryManagement.domain.models.libraryServices.attributes.LoanDate;
 import finalTest.libraryManagement.domain.models.libraryServices.attributes.PenaltyPrice;
-import finalTest.libraryManagement.domain.models.libraryServices.attributes.ServiceId;
-import finalTest.libraryManagement.domain.models.users.Users;
-import finalTest.libraryManagement.domain.models.users.attributes.PenaltyFee;
-import finalTest.libraryManagement.domain.models.users.attributes.UserId;
-import finalTest.libraryManagement.domain.models.users.attributes.UserLastName;
-import finalTest.libraryManagement.domain.models.users.attributes.UserName;
-import finalTest.libraryManagement.infrastructure.adapters.DBOs.booksDBO.BooksDBO;
-import finalTest.libraryManagement.infrastructure.adapters.DBOs.usersDBO.UsersDBO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import finalTest.libraryManagement.domain.models.user.User;
+import finalTest.libraryManagement.domain.models.user.attributes.UserId;
+import finalTest.libraryManagement.domain.models.user.attributes.UserLastName;
+import finalTest.libraryManagement.domain.models.user.attributes.UserName;
+import finalTest.libraryManagement.infrastructure.adapters.DBOs.bookDBO.BookDBO;
+import finalTest.libraryManagement.infrastructure.adapters.DBOs.userDBO.UserDBO;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,10 +28,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "library-services")
 public class LibraryServicesDBO {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer servicesId;
 
     private LocalDate devolutionDate;
@@ -50,55 +43,56 @@ public class LibraryServicesDBO {
 
     @OneToOne
     @JoinColumn(name = "userId")
-    private UsersDBO usersDBO;
+    private UserDBO userDBO;
 
     @OneToOne
     @JoinColumn(name = "bookId")
-    private BooksDBO booksDBO;
+    private BookDBO bookDBO;
+
+    public LibraryServicesDBO(LocalDate devolutionDate, LocalDate loanDate, Double penaltyPrice, UserDBO userDBO,
+                              BookDBO bookDBO) {
+        this.devolutionDate = devolutionDate;
+        this.loanDate = loanDate;
+        this.penaltyPrice = penaltyPrice;
+        this.userDBO = userDBO;
+        this.bookDBO = bookDBO;
+    }
 
     public static LibraryServices toDomain(LibraryServicesDBO libraryServicesDBO) {
-        return new LibraryServices(new ServiceId(libraryServicesDBO.getServicesId()),
-                                   new DevolutionDate(libraryServicesDBO.getDevolutionDate()),
-                                   new LoanDate(libraryServicesDBO.getLoanDate()),
-                                   new PenaltyPrice(libraryServicesDBO.getPenaltyPrice()),
-                                   new Users(
-                                           new UserId(libraryServicesDBO
-                                                              .getUsersDBO()
-                                                              .getUserId()),
-                                           new UserName(libraryServicesDBO
-                                                                .getUsersDBO()
-                                                                .getUserName()),
-                                           new UserLastName(libraryServicesDBO
-                                                                    .getUsersDBO()
-                                                                    .getUserLastName()),
-                                           new PenaltyFee(libraryServicesDBO
-                                                                  .getUsersDBO()
-                                                                  .getPenaltyFee())
-                                   ),
-                                   new Books(
-                                           new BookId(libraryServicesDBO
-                                                              .getBooksDBO()
-                                                              .getBookId()),
-                                           new BookName(libraryServicesDBO
-                                                                .getBooksDBO()
-                                                                .getBookName()),
-                                           new Author(libraryServicesDBO
-                                                              .getBooksDBO()
-                                                              .getAuthor()),
-                                           new Category(libraryServicesDBO
-                                                                .getBooksDBO()
-                                                                .getCategory()),
-                                           new Available(libraryServicesDBO
-                                                                 .getBooksDBO()
-                                                                 .getAvailable())
-                                   ));
+        return new LibraryServices(
+                new DevolutionDate(libraryServicesDBO.getDevolutionDate()),
+                new LoanDate(libraryServicesDBO.getLoanDate()),
+                new PenaltyPrice(libraryServicesDBO.getPenaltyPrice()),
+                new User(new UserId(libraryServicesDBO
+                                            .getUserDBO()
+                                            .getUserId()),
+                         new UserName(libraryServicesDBO
+                                              .getUserDBO()
+                                              .getUserName()),
+                         new UserLastName(libraryServicesDBO
+                                                  .getUserDBO()
+                                                  .getUserLastName())),
+                new finalTest.libraryManagement.domain.models.book.Book(new BookId(libraryServicesDBO
+                                            .getBookDBO()
+                                            .getBookId()),
+                                                                        new BookName(libraryServicesDBO
+                                              .getBookDBO()
+                                              .getBookName()),
+                                                                        new Author(libraryServicesDBO
+                                            .getBookDBO()
+                                            .getAuthor()),
+                                                                        new Category(libraryServicesDBO
+                                              .getBookDBO()
+                                              .getCategory()),
+                                                                        new Available(libraryServicesDBO
+                                               .getBookDBO()
+                                               .getAvailable()))
+        );
+
     }
 
     public static LibraryServicesDBO fromDomain(LibraryServices libraryServices) {
         return new LibraryServicesDBO(
-                libraryServices
-                        .getServiceId()
-                        .getServiceId(),
                 libraryServices
                         .getDevolutionDate()
                         .getDevolutionDate(),
@@ -108,46 +102,38 @@ public class LibraryServicesDBO {
                 libraryServices
                         .getPenaltyPrice()
                         .getPenaltyPrice(),
-                new UsersDBO(
-                        libraryServices
-                                .getUsers()
-                                .getUserId()
-                                .getUserId(),
-                        libraryServices
-                                .getUsers()
-                                .getUserName()
-                                .getUserName(),
-                        libraryServices
-                                .getUsers()
-                                .getUserLastName()
-                                .getUserLastName(),
-                        libraryServices
-                                .getUsers()
-                                .getPenaltyFee()
-                                .getPenaltyFee()),
-                new BooksDBO(
-                        libraryServices
-                                .getBooks()
-                                .getBookId()
-                                .getBookId(),
-                        libraryServices
-                                .getBooks()
-                                .getBookName()
-                                .getBookName(),
-                        libraryServices
-                                .getBooks()
-                                .getAuthor()
-                                .getAuthor(),
-                        libraryServices
-                                .getBooks()
-                                .getCategory()
-                                .getCategory(),
-                        libraryServices
-                                .getBooks()
-                                .getAvailable()
-                                .getAvailable()
-                ));
-
-
+                new UserDBO(libraryServices
+                                    .getUser()
+                                    .getUserId()
+                                    .getUserId(),
+                            libraryServices
+                                    .getUser()
+                                    .getUserName()
+                                    .getUserName(),
+                            libraryServices
+                                    .getUser()
+                                    .getUserLastName()
+                                    .getUserLastName()),
+                new BookDBO(libraryServices
+                                    .getBook()
+                                    .getBookId()
+                                    .getBookId(),
+                            libraryServices
+                                    .getBook()
+                                    .getBookName()
+                                    .getBookName(),
+                            libraryServices
+                                    .getBook()
+                                    .getAuthor()
+                                    .getAuthor(),
+                            libraryServices
+                                    .getBook()
+                                    .getCategory()
+                                    .getCategory(),
+                            libraryServices
+                                    .getBook()
+                                    .getAvailable()
+                                    .getAvailable())
+        );
     }
 }
